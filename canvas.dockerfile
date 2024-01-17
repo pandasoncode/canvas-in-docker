@@ -29,4 +29,13 @@ RUN for config in amazon_s3 database \
     do cp config/$config.yml.example config/$config.yml; done
 RUN cp config/dynamic_settings.yml.example config/dynamic_settings.yml 
 
+COPY ./config/database.yml config/database.yml
+COPY ./config/domain.yml config/domain.yml
+COPY ./config/dynamic_settings.yml config/dynamic_settings.yml
+COPY ./config/redis.yml config/redis.yml
+COPY ./config/security.yml config/security.yml
+
+RUN yarn gulp rev
+RUN RAILS_ENV=production bundle exec rake db:initial_setup
+
 SHELL ["/bin/sh", "-c"]

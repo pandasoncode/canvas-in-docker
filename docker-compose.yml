@@ -1,0 +1,29 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=canvas
+      - POSTGRES_DB=canvas_${ENVIRONMENT}
+    networks:
+      - canvas
+
+  canvas:
+    build:
+      context: .
+      dockerfile: canvas.dockerfile
+      args:
+        - ENVIRONMENT=${ENVIRONMENT}
+      network: canvas
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+      - "8080:80"
+    networks:
+      - canvas
+
+networks:
+  canvas: {}
+
