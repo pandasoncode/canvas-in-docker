@@ -11,6 +11,8 @@ production:
     canvas:
       # environment
       canvas:
+        encryption-secret: "astringthatisactually32byteslong"
+        signing-secret: "astringthatisactually32byteslong"
         # regexes for matching online meeting urls in calendar events
         # one per line. will get | or'd together to form the regex
         # that's eventually used.
@@ -61,9 +63,9 @@ production:
         url: 'https://cbbsk4vb5k.execute-api.us-east-1.amazonaws.com/prod/pandata-event' # dev PandataEvents environment
       rich-content-service:
         # if you're running canvas-rce-api on its own
-        app-host: "rce.canvas.docker"
+        # app-host: "canvas-rce-api-host"
         # if you're running canvas-rce-api with docker-compose/rce-api.override.yml in .env
-        app-host: "http://rce.canvas.docker:3000"
+        app-host: "http://canvas-rce-api-host:3000"
       common_cartridge_viewer:
         base_url: "http://localhost:3300"
       fullstory:
