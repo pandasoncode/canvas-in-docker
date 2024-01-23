@@ -1,41 +1,46 @@
-FROM nginx/unit:1.29.1-ruby3.1
-
-WORKDIR /var/www/canvas
+FROM ubuntu
 
 SHELL ["/bin/bash", "-c"]
 
-RUN apt update -y
-RUN git clone --branch prod --depth 1 https://github.com/instructure/canvas-lms.git .
-RUN apt-get install software-properties-common -y
-RUN apt-get update -y
-RUN apt install -y zlib1g-dev libxml2-dev \
-    libsqlite3-dev postgresql libpq-dev \
-    libxmlsec1-dev libyaml-dev libidn11-dev curl make g++
-    # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
-    # source ~/.bashrc && \
-    # nvm install 18 && \
-    # nvm use 18 && \
-    # source ~/.bashrc && \
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - &&\
-    apt-get install -y nodejs
-RUN npm install -g yarn    
-    # source ~/.bashrc && \
-RUN gem install bundler --version 2.4.19
-RUN bundle config set --local path vendor/bundle
-RUN bundle install
-RUN yarn install
-RUN for config in amazon_s3 database \
-    delayed_jobs domain file_store outgoing_mail security external_migration; \
-    do cp config/$config.yml.example config/$config.yml; done
-RUN cp config/dynamic_settings.yml.example config/dynamic_settings.yml 
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt update -y && apt upgrade -y && \
+    apt install -y software-properties-common zlib1g-dev libxml2-dev libsqlite3-dev postgresql libpq-dev libxmlsec1-dev libyaml-dev libidn11-dev curl make g++ libcurl4-openssl-dev ruby-dev vim nano git rbenv && \
+    echo 'eval "$(rbenv init -)"' >> ~/.bashrc && \
+    git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build && \
+    rbenv install 3.1.0 && \
+    rbenv global 3.1.0 && \
+    gem install passenger -v 6.0.20 && \
+    passenger-install-nginx-module && \
+    echo 'alias nginx=/opt/nginx/sbin/nginx' >> ~/.bashrc && \
+    apt clean
+
+WORKDIR /var/www/canvas
+
+RUN git clone --branch prod --depth 1 https://github.com/instructure/canvas-lms.git . && \
+    for config in amazon_s3 database delayed_jobs domain file_store outgoing_mail security external_migration; \
+    do cp config/$config.yml.example config/$config.yml; done && \
+    cp config/dynamic_settings.yml.example config/dynamic_settings.yml && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - &&\
+    apt-get install -y nodejs && \
+    npm install -g yarn && \
+    yarn install && \
+    apt clean
 
 COPY ./config/database.yml config/database.yml
 COPY ./config/domain.yml config/domain.yml
 COPY ./config/dynamic_settings.yml config/dynamic_settings.yml
 COPY ./config/redis.yml config/redis.yml
 COPY ./config/security.yml config/security.yml
+COPY ./canvas.conf /opt/nginx/conf/nginx.conf
+COPY ./script.sh /root/script.sh
 
-RUN yarn gulp rev
-RUN RAILS_ENV=production bundle exec rake db:initial_setup
+RUN chmod +x /root/script.sh
 
-SHELL ["/bin/sh", "-c"]
+ENV RAILS_ENV=production
+ENV CANVAS_LMS_ADMIN_EMAIL=example@example.com
+ENV CANVAS_LMS_ADMIN_PASSWORD=adminadmin
+ENV CANVAS_LMS_ACCOUNT_NAME=example
+ENV CANVAS_LMS_STATS_COLLECTION=3
+
+CMD [ "/root/script.sh" ]
