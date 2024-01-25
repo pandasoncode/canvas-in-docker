@@ -11,7 +11,7 @@
 production:
   url:
   # list of redis servers to use in the ring
-  - redis://localhost
+  - redis://redis
   # off, compact, or json
   # log_style: compact
   connect_timeout: 0.5

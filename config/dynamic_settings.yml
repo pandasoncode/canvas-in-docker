@@ -85,11 +85,11 @@ production:
           - active_record
         read_path: active_record
       live_events.yml: |-
-        aws_endpoint: http://kinesis.canvaslms.docker
+        aws_endpoint: http://kinesis.canvaslms.docker:4567
         kinesis_stream_name: live-events
-        aws_access_key_id: key
-        aws_secret_access_key_dec: secret
-        # stub_credentials: true # can be used in dev to print creds to stdout
+        aws_access_key_id: x
+        aws_secret_access_key_dec: x
+        stub_credentials: true # can be used in dev to print creds to stdout
       # datadog_apm.yml: |
       #   sample_rate: 0.0
       #   host_sample_rate: 0.0

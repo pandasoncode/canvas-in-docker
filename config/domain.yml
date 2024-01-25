@@ -9,7 +9,7 @@ development:
   # ssl: true
 
 production:
-  domain: "pandasoncode.com"
+  domain: "localhost"
   # whether this instance of canvas is served over ssl (https) or not
   # defaults to true for production, false for test/development
   ssl: true

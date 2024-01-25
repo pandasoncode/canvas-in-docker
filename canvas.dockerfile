@@ -53,11 +53,8 @@ RUN mkdir -p /var/www/canvas/tmp/files && \
     chmod 777 /var/www/canvas/tmp/files && \
     chmod 777 /tmp/attachment_fu
 
-COPY ./config/database.yml config/database.yml
-COPY ./config/domain.yml config/domain.yml
-COPY ./config/dynamic_settings.yml config/dynamic_settings.yml
-COPY ./config/redis.yml config/redis.yml
-COPY ./config/security.yml config/security.yml
+COPY ./config/* config/
+
 COPY ./canvas.conf /opt/nginx/conf/nginx.conf
 COPY ./script.sh /root/script.sh
 

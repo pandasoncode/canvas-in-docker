@@ -17,6 +17,26 @@ docker run -d \
     --network canvas \
     postgres
 
+# Create redis container
+docker run -d \
+    --name redis \
+    --network canvas \
+    redis
+
+# Create kinesis container
+docker run -d \
+    --name kinesis.canvaslms.docker \
+    -p 4567:4567 \
+    --network canvas \
+    instructure/kinesalite
+
+# Create stream
+AWS_ACCESS_KEY_ID=x AWS_SECRET_ACCESS_KEY=x \
+    aws --endpoint-url http://localhost:4567/ \
+    kinesis create-stream \
+    --stream-name=live-events \
+    --shard-count=1
+
 # Build canvas image
 docker image build -t canvas -f canvas.dockerfile .
 
