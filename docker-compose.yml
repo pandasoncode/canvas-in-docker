@@ -12,9 +12,10 @@ services:
 
   canvas:
     container_name: canvas
-    build:
-      context: .
-      dockerfile: canvas.dockerfile
+    image: canvas
+    # build:
+    #   context: .
+    #   dockerfile: canvas.dockerfile
     depends_on:
       - postgres
     ports:
