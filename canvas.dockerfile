@@ -11,9 +11,6 @@ RUN apt update -y && apt upgrade -y && \
 WORKDIR /var/www/canvas
 
 RUN git clone --branch prod --depth 1 https://github.com/instructure/canvas-lms.git . && \
-    for config in amazon_s3 database delayed_jobs domain file_store outgoing_mail security external_migration; \
-    do cp config/$config.yml.example config/$config.yml; done && \
-    cp config/dynamic_settings.yml.example config/dynamic_settings.yml && \
     curl -fsSL https://deb.nodesource.com/setup_18.x | bash - &&\
     apt-get install -y nodejs && \
     gem install bundler --version 2.4.19 && \
@@ -51,6 +48,7 @@ RUN chmod o+x /root && \
 # Crear carpeta para archivos temporales
 RUN mkdir -p /var/www/canvas/tmp/files && \
     chmod 777 /var/www/canvas/tmp/files && \
+    mkdir -p /tmp/attachment_fu && \
     chmod 777 /tmp/attachment_fu
 
 COPY ./config/* config/
