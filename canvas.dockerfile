@@ -58,4 +58,12 @@ COPY ./script.sh /root/script.sh
 
 RUN chmod +x /root/script.sh
 
+RUN gem install rails -v 7.1.3
+
+RUN apt install python3 && \
+    curl https://bootstrap.pypa.io/get-pip.py | python3 && \
+    pip install lxml && \
+    git clone https://github.com/instructure/QTIMigrationTool.git vendor/QTIMigrationTool && \
+    chmod +x vendor/QTIMigrationTool/migrate.py
+
 CMD [ "/root/script.sh" ]
