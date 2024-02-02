@@ -36,6 +36,8 @@ if [ -n "$DATABASE_POPULATION" ]; then
     fi
 fi
 
+rails runner "Setting.set('enable_page_views', 'db')"
+
 /opt/nginx/sbin/nginx
 
 # Iniciar delayed_job
