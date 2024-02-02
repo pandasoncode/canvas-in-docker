@@ -38,6 +38,10 @@ fi
 
 /opt/nginx/sbin/nginx
 
+# Iniciar delayed_job
+echo "delayed_job is running..."
+script/delayed_job start
+
 # Iniciar canvas
 echo "canvas is running..."
 tail -f /var/www/canvas/log/production.log
