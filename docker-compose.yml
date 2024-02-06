@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: canvas
+      POSTGRES_DB: canvas_production
+
+  redis:
+    image: redis
+
+  kinesis:
+    image: instructure/kinesalite
+    ports:
+      - "4567:4567"
+
+  canvas:
+    image: canvas
+    ports:
+      - "443:443"
+      - "8080:80"
+    environment:
+      DATABASE_POPULATION: ${DATABASE_POPULATION:-false}

@@ -2,7 +2,7 @@
 cd /var/www/canvas
 
 # Check if DATABASE_POPULATION environment variable is set
-if [ -n "$DATABASE_POPULATION" ]; then
+if [ "$DATABASE_POPULATION" == "true" ]; then
     # Comando original
     original_command="bundle exec rake db:initial_setup"
 
@@ -35,6 +35,8 @@ if [ -n "$DATABASE_POPULATION" ]; then
         bundle exec rake db:migrate
     fi
 fi
+
+bundle exec rake brand_configs:generate_and_upload_all
 
 rails runner "Setting.set('enable_page_views', 'db')"
 

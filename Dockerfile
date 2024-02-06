@@ -51,13 +51,6 @@ RUN mkdir -p /var/www/canvas/tmp/files && \
     mkdir -p /tmp/attachment_fu && \
     chmod 777 /tmp/attachment_fu
 
-COPY ./config/* config/
-
-COPY ./canvas.conf /opt/nginx/conf/nginx.conf
-COPY ./script.sh /root/script.sh
-
-RUN chmod +x /root/script.sh
-
 RUN gem install rails -v 7.1.3
 
 RUN apt install python3 && \
@@ -65,5 +58,12 @@ RUN apt install python3 && \
     pip install lxml && \
     git clone https://github.com/instructure/QTIMigrationTool.git vendor/QTIMigrationTool && \
     chmod +x vendor/QTIMigrationTool/migrate.py
+
+COPY ./config/* config/
+
+COPY ./canvas.conf /opt/nginx/conf/nginx.conf
+COPY ./script.sh /root/script.sh
+
+RUN chmod +x /root/script.sh
 
 CMD [ "/root/script.sh" ]

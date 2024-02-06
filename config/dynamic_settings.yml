@@ -85,7 +85,7 @@ production:
           - active_record
         read_path: active_record
       live_events.yml: |-
-        aws_endpoint: http://kinesis.canvaslms.docker:4567
+        aws_endpoint: http://kinesis:4567
         kinesis_stream_name: live-events
         aws_access_key_id: x
         aws_secret_access_key_dec: x
